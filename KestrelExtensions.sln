@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelExtensions", "Kestre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelExtensions.Tests", "KestrelExtensions\test\KestrelExtensions.Tests.csproj", "{8A75535B-1CE8-439B-81DC-91D09720FC93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F105FBF3-E923-4236-B14C-C3A3F8719623}"
+	ProjectSection(SolutionItems) = preProject
+		license.txt = license.txt
+		readme.md = readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
