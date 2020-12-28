@@ -56,7 +56,7 @@ namespace KestrelExtensions.Tests
 			Assert.Equal("Hello World!", response);
 		}
 
-		[Fact]
+		/*[Fact]
 		public async Task Can_Make_Http2_SSL_Requests_Over_Named_Pipe()
 		{
 			var socketsHandler = new SocketsHttpHandler
@@ -71,7 +71,7 @@ namespace KestrelExtensions.Tests
 			var response = await httpClient.GetStringAsync("https://localhost/");
 
 			Assert.Equal("Hello World!", response);
-		}
+		}*/
 
 		private static async Task<NamedPipeClientStream> CreatePipeStream(string pipeName)
 		{
