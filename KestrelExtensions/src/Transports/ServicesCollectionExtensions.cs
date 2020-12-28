@@ -1,5 +1,6 @@
 ﻿using KestrelExtensions.Transports;
 using KestrelExtensions.Transports.ClientSideHosting;
+using KestrelExtensions.Transports.ClientSideHosting.Sockets;
 using KestrelExtensions.Transports.Pipes;
 using KestrelExtensions.Transports.Sockets;
 using Microsoft.AspNetCore.Connections;
@@ -56,6 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		public static IServiceCollection UseServerTransport(this IServiceCollection services)
 		{
 			services.UseTransport<TrialServerTransportFactory>();
+			services.AddSingleton<ITrialConnectionClientFactory, TrialSocketClientFactory>();
 			return services;
 		}
 	}

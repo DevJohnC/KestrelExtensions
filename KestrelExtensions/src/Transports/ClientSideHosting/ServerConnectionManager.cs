@@ -9,25 +9,39 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 {
 	internal class ServerConnectionManager : IConnectionListener
 	{
-		private readonly ILoggerFactory _loggerFactory;
 		private readonly IConnectionClient _client;
+		private readonly ILogger<ServerConnectionManager> _logger;
 
-		public EndPoint EndPoint => _client.SpecifiedEndPoint;
+		private TaskCompletionSource? _connectionClosed;
+		private ConnectionContext? _currentConnection;
 
-		public ServerConnectionManager(ILoggerFactory loggerFactory, IConnectionClient client)
+		public ServerConnectionManager(ILogger<ServerConnectionManager> logger, IConnectionClient client)
 		{
-			_loggerFactory = loggerFactory;
+			_logger = logger;
 			_client = client;
 		}
 
-		public void Start()
-		{
+		public EndPoint EndPoint => _client.SpecifiedEndPoint;
 
-		}
-
-		public ValueTask<ConnectionContext> AcceptAsync(CancellationToken cancellationToken = default)
+		public async ValueTask<ConnectionContext> AcceptAsync(CancellationToken cancellationToken = default)
 		{
-			throw new NotImplementedException();
+			if (_currentConnection != null && _connectionClosed != null)
+			{
+				await _connectionClosed.Task;
+			}
+
+			var newContext = await _client.ConnectToServer(cancellationToken);
+			var connectionClosed = new TaskCompletionSource();
+
+			newContext.ConnectionClosed.Register(() =>
+			{
+				connectionClosed.SetResult();
+			});
+
+			_currentConnection = newContext;
+			_connectionClosed = connectionClosed;
+
+			return newContext;
 		}
 
 		public ValueTask DisposeAsync()
