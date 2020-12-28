@@ -10,14 +10,14 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 	internal class ServerConnectionManager : IConnectionListener
 	{
 		private readonly ILoggerFactory _loggerFactory;
-		private readonly ServerEndPoint _endpoint;
+		private readonly IConnectionClient _client;
 
-		public EndPoint EndPoint => throw new NotImplementedException();
+		public EndPoint EndPoint => _client.SpecifiedEndPoint;
 
-		public ServerConnectionManager(ILoggerFactory loggerFactory, ServerEndPoint endpoint)
+		public ServerConnectionManager(ILoggerFactory loggerFactory, IConnectionClient client)
 		{
 			_loggerFactory = loggerFactory;
-			_endpoint = endpoint;
+			_client = client;
 		}
 
 		public void Start()
