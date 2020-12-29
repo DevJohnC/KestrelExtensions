@@ -39,3 +39,31 @@ var socketsHandler = new SocketsHttpHandler
 };
 var httpClient = new HttpClient(socketsHandler);
 ```
+
+## Outbound Server-to-Client Connections
+
+The Server-to-Client transport is intended for use cases where you need to connect hosted services to a client from the server.
+
+Admittedly this sounds a bit confusing. Think of an application installed on a customers workstation and you need to call gRPC services
+from an internet server. Having the workstation connect to the internet service and exposing gRPC services over that established
+connection removes the headaches of trying to host a server behind firewalls and NATs.
+
+Example:
+
+```
+private static IHostBuilder CreateHostBuilder() =>
+	Host.CreateDefaultBuilder()
+		.ConfigureServices(services => services.UseServerToClientTransport())
+		.ConfigureWebHostDefaults(builder =>
+		{
+			builder.ConfigureKestrel(options =>
+			{
+				options.Listen(new ServerEndPoint(
+					new IPEndPoint(
+						IPAddress.Parse("x.x.x.x"), 9999
+					)
+				));
+			});
+			builder.UseStartup<Startup>();
+		});
+```
