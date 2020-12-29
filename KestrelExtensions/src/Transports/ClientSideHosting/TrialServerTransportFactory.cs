@@ -42,8 +42,8 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 					return new TransportFactoryBindResult(endpoint);
 				}
 
-				var listener = new ServerConnectionManager(_loggerFactory, connectionClient);
-				listener.Start();
+				var listener = new ServerConnectionManager(_loggerFactory.CreateLogger<ServerConnectionManager>(),
+					connectionClient);
 				return new TransportFactoryBindResult(true, endpoint, listener);
 			}
 

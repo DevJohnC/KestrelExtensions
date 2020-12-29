@@ -43,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <returns></returns>
 		public static IServiceCollection UseSocketsTransport(this IServiceCollection services)
 		{
-			services.AddSingleton<SocketTransportFactory>();
+			services.AddSingleton<AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory>();
 			services.UseTransport<TrialSocketTransportFactory>();
 			return services;
 		}
