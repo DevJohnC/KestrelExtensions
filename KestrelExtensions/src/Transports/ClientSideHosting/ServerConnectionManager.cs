@@ -14,6 +14,7 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 
 		private TaskCompletionSource? _connectionClosed;
 		private ConnectionContext? _currentConnection;
+		private bool _unbound;
 
 		public ServerConnectionManager(ILogger<ServerConnectionManager> logger, IConnectionClient client)
 		{
@@ -30,28 +31,49 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 				await _connectionClosed.Task;
 			}
 
-			var newContext = await _client.ConnectToServer(cancellationToken);
-			var connectionClosed = new TaskCompletionSource();
+			if (_unbound)
+				return null;
 
-			newContext.ConnectionClosed.Register(() =>
+			while (!cancellationToken.IsCancellationRequested &&
+				!_unbound)
 			{
-				connectionClosed.SetResult();
-			});
+				try
+				{
+					var newContext = await _client.ConnectToServer(cancellationToken);
+					var connectionClosed = new TaskCompletionSource();
 
-			_currentConnection = newContext;
-			_connectionClosed = connectionClosed;
+					newContext.ConnectionClosed.Register(() =>
+					{
+						_logger.LogInformation("Server connection to {0} lost", _client.ServerEndPoint);
+						connectionClosed.SetResult();
+					});
 
-			return newContext;
+					_currentConnection = newContext;
+					_connectionClosed = connectionClosed;
+
+					_logger.LogInformation("Server connection to {0} established", _client.ServerEndPoint);
+
+					return newContext;
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Error establishing connection to {0}", _client.ServerEndPoint);
+				}
+			}
+
+			return null;
 		}
 
 		public ValueTask DisposeAsync()
 		{
-			throw new NotImplementedException();
+			return default;
 		}
 
 		public ValueTask UnbindAsync(CancellationToken cancellationToken = default)
 		{
-			throw new NotImplementedException();
+			_unbound = true;
+			_currentConnection?.Abort();
+			return default;
 		}
 	}
 }
