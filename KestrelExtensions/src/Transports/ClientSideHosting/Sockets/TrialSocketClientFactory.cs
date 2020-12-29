@@ -16,11 +16,12 @@ namespace KestrelExtensions.Transports.ClientSideHosting.Sockets
 			_loggerFactory = loggerFactory;
 		}
 
-		public async ValueTask<TransportFactoryClientResult> TryCreateClientAsync(EndPoint endpoint, CancellationToken cancellationToken = default)
+		public async ValueTask<TransportFactoryClientResult> TryCreateClientAsync(ServerEndPoint endpoint, CancellationToken cancellationToken = default)
 		{
-			if (endpoint is FileHandleEndPoint ||
-				endpoint is UnixDomainSocketEndPoint ||
-				(endpoint is IPEndPoint ipEndPoint &&
+			var underlyingEndpoint = endpoint.EndPoint;
+			if (underlyingEndpoint is FileHandleEndPoint ||
+				underlyingEndpoint is UnixDomainSocketEndPoint ||
+				(underlyingEndpoint is IPEndPoint ipEndPoint &&
 				ipEndPoint.Port != 0)) //  a port of 0 indicates an extension endpoint masquerading as an IPEndPoint to avoid Kestrel throwing exceptions
 			{
 				return new TransportFactoryClientResult(

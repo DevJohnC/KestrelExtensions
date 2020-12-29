@@ -21,7 +21,7 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 			_client = client;
 		}
 
-		public EndPoint EndPoint => _client.SpecifiedEndPoint;
+		public EndPoint EndPoint => _client.ServerEndPoint;
 
 		public async ValueTask<ConnectionContext> AcceptAsync(CancellationToken cancellationToken = default)
 		{

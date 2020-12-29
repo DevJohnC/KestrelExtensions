@@ -14,17 +14,17 @@ namespace KestrelExtensions.Transports.ClientSideHosting.Sockets
 	{
 		private readonly ILoggerFactory _loggerFactory;
 
-		public SocketClient(EndPoint specifiedEndPoint, ILoggerFactory loggerFactory)
+		public SocketClient(ServerEndPoint specifiedEndPoint, ILoggerFactory loggerFactory)
 		{
-			SpecifiedEndPoint = specifiedEndPoint;
+			ServerEndPoint = specifiedEndPoint;
 			_loggerFactory = loggerFactory;
 		}
 
-		public EndPoint SpecifiedEndPoint { get; }
+		public ServerEndPoint ServerEndPoint { get; }
 
 		public async Task<ConnectionContext> ConnectToServer(CancellationToken cancellationToken = default)
 		{
-			var endpoint = SpecifiedEndPoint;
+			var endpoint = ServerEndPoint.EndPoint;
 			Socket socket;
 			switch (endpoint)
 			{

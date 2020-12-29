@@ -18,7 +18,7 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 			_clientFactories = clientFactories.ToList();
 		}
 
-		private async Task<IConnectionClient?> CreateConnectionClient(EndPoint endpoint, CancellationToken cancellationToken)
+		private async Task<IConnectionClient?> CreateConnectionClient(ServerEndPoint endpoint, CancellationToken cancellationToken)
 		{
 			foreach (var factory in _clientFactories)
 			{
@@ -36,7 +36,7 @@ namespace KestrelExtensions.Transports.ClientSideHosting
 		{
 			if (endpoint is ServerEndPoint serverEndPoint)
 			{
-				var connectionClient = await CreateConnectionClient(serverEndPoint.EndPoint, cancellationToken);
+				var connectionClient = await CreateConnectionClient(serverEndPoint, cancellationToken);
 				if (connectionClient == null)
 				{
 					return new TransportFactoryBindResult(endpoint);
