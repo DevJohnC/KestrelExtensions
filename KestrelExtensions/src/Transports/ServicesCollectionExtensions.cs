@@ -1,10 +1,10 @@
 ﻿using KestrelExtensions.Transports;
 using KestrelExtensions.Transports.ClientSideHosting;
+using KestrelExtensions.Transports.ClientSideHosting.Pipes;
 using KestrelExtensions.Transports.ClientSideHosting.Sockets;
 using KestrelExtensions.Transports.Pipes;
 using KestrelExtensions.Transports.Sockets;
 using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -51,13 +51,18 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <summary>
 		/// Add support for hosting Kestrel on outbound connections established to a server from this client.
 		/// </summary>
-		/// <remarks>This will remove the default sockets support. To keep using sockets add support with UseSockets().</remarks>
+		/// <remarks>
+		/// This will remove the default sockets support. To keep using sockets add support with UseSockets().
+		/// 
+		/// By default transports that support outgoing connections to socket endpoint types and named pipes are registered.
+		/// </remarks>
 		/// <param name="services"></param>
 		/// <returns></returns>
 		public static IServiceCollection UseServerTransport(this IServiceCollection services)
 		{
 			services.UseTransport<TrialServerTransportFactory>();
 			services.AddSingleton<ITrialConnectionClientFactory, TrialSocketClientFactory>();
+			services.AddSingleton<ITrialConnectionClientFactory, TrialPipeClientFactory>();
 			return services;
 		}
 	}
