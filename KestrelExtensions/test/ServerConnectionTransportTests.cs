@@ -66,7 +66,7 @@ namespace KestrelExtensions.Tests
 
 		private static IHostBuilder CreateHostBuilder(EndPoint serverEndPoint) =>
 			Host.CreateDefaultBuilder()
-				.ConfigureServices(services => services.UseServerTransport())
+				.ConfigureServices(services => services.UseServerToClientTransport())
 				.ConfigureWebHostDefaults(builder =>
 				{
 					builder.ConfigureKestrel(options =>

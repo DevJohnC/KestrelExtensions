@@ -58,7 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// </remarks>
 		/// <param name="services"></param>
 		/// <returns></returns>
-		public static IServiceCollection UseServerTransport(this IServiceCollection services)
+		public static IServiceCollection UseServerToClientTransport(this IServiceCollection services)
 		{
 			services.UseTransport<TrialServerTransportFactory>();
 			services.AddSingleton<ITrialConnectionClientFactory, TrialSocketClientFactory>();
